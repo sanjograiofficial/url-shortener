@@ -2,10 +2,12 @@ const express = require("express");
 const { connectmongo } = require("./connection");
 const URL = require("./model/url");
 const path = require("path");
+const cookieParser = require("cookie-parser");
 
 const urlRoute = require("./router/router");
 const staticRoute = require("./router/staticRouter");
 const userRoute = require("./router/user");
+const { restrictToLoggedInUserOnly, checkAuth } = require("./middleware/auth");
 
 const app = express();
 const PORT = 8001;
@@ -19,9 +21,10 @@ connectmongo("mongodb://localhost:27017/short-url").then(
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use("/url", urlRoute);
-app.use("/", staticRoute);
+// Routes
+app.use("/url", restrictToLoggedInUserOnly, urlRoute);
 app.use("/user", userRoute);
+app.use("/", checkAuth, staticRoute);
 
 app.get("/url/:shortId", async (req, res) => {
   const shortId = req.params.shortId;
