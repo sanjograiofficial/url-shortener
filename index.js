@@ -4,7 +4,7 @@ const URL = require("./model/url");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 
-const urlRoute = require("./router/router");
+const urlRoute = require("./router/url");
 const staticRoute = require("./router/staticRouter");
 const userRoute = require("./router/user");
 const { restrictToLoggedInUserOnly, checkAuth } = require("./middleware/auth");
@@ -20,6 +20,7 @@ connectmongo("mongodb://localhost:27017/short-url").then(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 
 // Routes
 app.use("/url", restrictToLoggedInUserOnly, urlRoute);
