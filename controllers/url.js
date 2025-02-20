@@ -1,7 +1,6 @@
 const shortid = require("shortid");
 
 const URL = require("../model/url");
-const { json } = require("express");
 
 async function createUrl(req, res) {
   const body = req.body;
